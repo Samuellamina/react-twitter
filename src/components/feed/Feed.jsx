@@ -5,18 +5,12 @@ import Post from "../post/Post";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore/lite";
 import db from "../../firebase";
+import FlipMove from "react-flip-move";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // async function getPosts(db) {
-    //   const postsCol = collection(db, "posts");
-    //   const postsSnapshot = await getDocs(postsCol);
-    //   const postsList = postsSnapshot.docs.map((doc) => doc.data());
-    //   return postsList;
-    // }
-
     db.collection("posts").onSnapshot((snapshot) => {
       setPosts(snapshot.docs.map((doc) => doc.data()));
     });
@@ -32,18 +26,21 @@ const Feed = () => {
       {/* Tweetbox */}
       <TweetBox />
 
-      {/* Posts */}
-      {posts.map((post) => (
-        <Post
-          displayName={post.displayName}
-          username={post.username}
-          verified={post.verified}
-          text={post.text}
-          avatar={post.avatar}
-          image={post.image}
-        />
-      ))}
-      <Post />
+      <FlipMove>
+        {/* Posts */}
+        {posts.map((post) => (
+          <Post
+            //proper to use post.id
+            key={post.text}
+            displayName={post.displayName}
+            username={post.username}
+            verified={post.verified}
+            text={post.text}
+            avatar={post.avatar}
+            image={post.image}
+          />
+        ))}
+      </FlipMove>
     </div>
   );
 };
